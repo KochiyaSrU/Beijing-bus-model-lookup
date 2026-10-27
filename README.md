@@ -6,7 +6,7 @@
 ![主界面](截图/主界面.png)
 
 **下载 / 安装**：[Releases](https://github.com/KochiyaSrU/Beijing-bus-model-lookup/releases/latest)
-里的 `Beijing-bus-model-lookup-1.0.zip` → 解压后双击 `install.bat`（装到用户目录，桌面/开始菜单有快捷方式），
+里的 `Beijing-bus-model-lookup-1.1.zip` → 解压后双击 `install.bat`（装到用户目录，桌面/开始菜单有快捷方式），
 或者直接双击里面的 `北京公交车型查询器.exe` 免安装运行。详细用法见 [使用说明.md](使用说明.md)。
 
 ---
