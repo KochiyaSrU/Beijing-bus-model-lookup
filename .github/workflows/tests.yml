@@ -1,0 +1,32 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install pillow
+
+      - name: 跑全部测试（302 项）
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python -m unittest -v test_bpt_bus_digital_number.py
+
+      - name: 命令行自检（数据/磁盘/版本）
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python BPT_BusDigitalNumber.py --self-test
