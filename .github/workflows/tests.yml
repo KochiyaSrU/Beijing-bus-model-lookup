@@ -21,12 +21,29 @@ jobs:
           python -m pip install --upgrade pip
           pip install pillow
 
-      - name: 跑全部测试（302 项）
+      # GUI 相关的测试只在本地跑（CI 机器上的字体/分辨率与真实屏幕不同，测了也不代表用户那边）。
+      # 这里跑数据层、联网解析、自检这些确定性部分。
+      - name: 数据层与联网解析测试
         env:
           PYTHONIOENCODING: utf-8
-        run: python -m unittest -v test_bpt_bus_digital_number.py
+        run: |
+          python -m unittest -v `
+            test_bpt_bus_digital_number.BusRangeTests `
+            test_bpt_bus_digital_number.NumberValidationTests `
+            test_bpt_bus_digital_number.RangeValidationTests `
+            test_bpt_bus_digital_number.SegmentLookupTests `
+            test_bpt_bus_digital_number.WorkbookTests `
+            test_bpt_bus_digital_number.ShippedDataTests `
+            test_bpt_bus_digital_number.ModelTagTests `
+            test_bpt_bus_digital_number.HealthReportTests `
+            test_bpt_bus_digital_number.TagRuleTests `
+            test_bpt_bus_digital_number.LineDataTests `
+            test_bpt_bus_digital_number.RealtimeTests `
+            test_bpt_bus_digital_number.WebExportTests `
+            test_bpt_bus_digital_number.OnlineParseTests `
+            test_bpt_bus_digital_number.SelfCheckTests
 
-      - name: 命令行自检（数据/磁盘/版本）
+      - name: 命令行自检
         env:
           PYTHONIOENCODING: utf-8
         run: python BPT_BusDigitalNumber.py --self-test
