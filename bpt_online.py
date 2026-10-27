@@ -334,6 +334,52 @@ def short_error(error: BaseException) -> str:
     return "连不上"
 
 
+def probe_network(settings: "OnlineSettings | None" = None) -> tuple[bool, str]:
+    """快速探测联网可用性：域名解析 → TCP → HTTPS → MCP 握手。
+
+    返回 (是否可用, 一句话说明)。**不写缓存、不写日志、不碰界面**，所以自检和命令行都能用。
+    """
+    import socket
+    import time as _time
+    import urllib.request
+
+    options = settings or OnlineSettings()
+    if not options.usable:
+        return True, "已关闭（本地功能不受影响）"
+    base = options.base_url
+    host = base.split("//", 1)[-1].split("/", 1)[0]
+    try:
+        address = socket.gethostbyname(host)
+    except OSError as error:
+        return False, f"域名解析不了（{error}）"
+    try:
+        mark = _time.perf_counter()
+        with socket.create_connection((host, 443), timeout=options.connect_timeout_sec):
+            tcp = _time.perf_counter() - mark
+    except OSError as error:
+        return False, f"连不上 {host}:443（{error}）"
+    try:
+        mark = _time.perf_counter()
+        request = urllib.request.Request(
+            f"{base}/sse", headers={"Accept": "text/event-stream", "User-Agent": USER_AGENT}
+        )
+        with urllib.request.urlopen(request, timeout=options.connect_timeout_sec) as response:
+            status = response.status
+        https = _time.perf_counter() - mark
+    except Exception as error:  # noqa: BLE001 - 自检要把原因原样报出来
+        return False, f"HTTPS 请求失败（{type(error).__name__}: {error}）"
+    client = MCPClient(settings=options)
+    try:
+        mark = _time.perf_counter()
+        client.connect()
+        handshake = _time.perf_counter() - mark
+    except OnlineError as error:
+        return False, f"握手失败（{error_text(error)}）"
+    finally:
+        client.close()
+    return True, f"{address} · TCP {tcp:.2f}s · HTTPS {status} {https:.2f}s · 握手 {handshake:.1f}s"
+
+
 def _network_hint(text: str) -> str:
     """针对最常见的两种网络错误补一句"那大概是什么原因"。
 

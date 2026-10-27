@@ -23,6 +23,7 @@ from tkinter import filedialog, font as tkfont, messagebox, simpledialog, ttk
 from PIL import Image, ImageGrab, ImageTk, UnidentifiedImageError
 
 import bpt_web
+from bpt_selfcheck import CheckItem  # 自检结果类型（自检模块本身不依赖界面）
 from bpt_data import (  # noqa: F401 - 数据层搬到了 bpt_data.py，这里全部再导出，旧引用不变
     _column_letter,
     _first_sheet_path,
@@ -219,8 +220,7 @@ from bpt_data import (  # noqa: F401 - 数据层搬到了 bpt_data.py，这里�
     save_route_list,
     validate_line_numbers,
 )
-from bpt_online import (  # 联网查询：只用标准库，界面里按需调用
-    MCPClient,
+from bpt_online import (  # 联网查询：只用标准库，界面里按需调用    MCPClient,
     OnlineError,
     OnlineService,
     OnlineSettings,
@@ -3295,7 +3295,8 @@ class BusLookupApp(tk.Tk):
         # 少用的联网两项已收进卡片里的菜单；不再整块折叠（折叠后窗口收不回来、也太空，用户反馈过）
         self.update_idletasks()
         width = max(pad(468), self.winfo_reqwidth())
-        height = min(self.winfo_reqheight(), int(self.winfo_screenheight() * 0.92))
+        # 高度：内容要多少给多少，只受"屏幕 − 120"限制（绝不裁内容）
+        height = min(self.winfo_reqheight(), max(480, int(self.winfo_screenheight()) - 120))
         center_window(self, None, width, height)
         self.minsize(pad(440), min(height, pad(520)))
         self._sized = True
@@ -3303,15 +3304,11 @@ class BusLookupApp(tk.Tk):
         self.number_var.trace_add("write", self._on_number_changed)
         self.entry.focus_set()
 
-    def toggle_more_tools(self) -> None:
-        """（保留占位）以前用来整块折叠工具卡片，现已改成卡片内菜单，不再需要。"""
-        return
-
     def fit_window(self) -> None:
-        """内容变高时把窗口一起长高（上限是"屏幕高 − 100"，给任务栏留位置）。"""
+        """内容变高时把窗口一起长高（上限：屏幕高 − 120，且不超过 1240，避免顶满屏幕）。"""
         try:
             self.update_idletasks()
-            needed = min(self.winfo_reqheight(), max(480, int(self.winfo_screenheight()) - 100))
+            needed = min(self.winfo_reqheight(), max(480, int(self.winfo_screenheight()) - 120))
             if needed > self.winfo_height() + 2:
                 self.geometry(f"{self.winfo_width()}x{needed}")
         except tk.TclError:
@@ -3569,10 +3566,6 @@ class BusLookupApp(tk.Tk):
             except (tk.TclError, ValueError):
                 pass
             self._online_after = None
-
-    def _sync_online_status(self) -> None:
-        """（保留占位）以前把联网信息接到状态栏，现在它显示在车型下面。"""
-        return
 
     def _clear_online(self) -> None:
         self._cancel_online_lookup()
@@ -10791,6 +10784,49 @@ def cli_export_html(target: str) -> tuple[int, list[str]]:
     return 0, [f"已导出：{written}", f"大小：{size / 1024:.0f} KB", "双击即可打开，也可以发到手机上离线查看。"]
 
 
+def _selfcheck_tag_item(base: Path):
+    """给自检用的标签覆盖率检查（标签推导在界面层，所以放这儿注入）。"""
+    try:
+        ranges = load_ranges(base / DATA_FILENAME)
+    except Exception as error:  # noqa: BLE001
+        return CheckItem("tags", "车型标签", False, f"读不到号段表：{error}", "先修号段表")
+    names = model_names(ranges)
+    if not names:
+        return CheckItem("tags", "车型标签", False, "没有车型可标", "先修号段表")
+    overrides = load_tag_overrides(base / TAG_FILENAME)
+    unknown = 0
+    for name in names:
+        tag = model_tags(name, overrides)
+        if any(value == UNKNOWN_TAG for value in (tag.manufacturer, tag.fuel, tag.length, tag.body)):
+            unknown += 1
+    covered = len(names) - unknown
+    ratio = covered / len(names) if names else 0
+    if ratio < 0.9:
+        return CheckItem(
+            "tags", "车型标签", False,
+            f"{len(names)} 种车型里 {unknown} 种还有未确认项（覆盖率 {ratio:.0%}）",
+            "在「数据体检」里逐项确认，或用「标签规则」一次标一批",
+            blocking=False,  # 只是提示：没标完不影响查车型
+        )
+    return CheckItem("tags", "车型标签", True, f"{covered}/{len(names)} 种齐全（{ratio:.0%}）")
+
+
+def cli_self_test(as_json: bool = False, deep: bool = False) -> int:
+    """命令行自检：不开窗口，直接报告数据/磁盘/版本（`--deep` 再测联网）。"""
+    import bpt_selfcheck as check
+
+    base = application_dir()
+    items = check.run_self_checks(
+        base, load_settings(base), deep=deep, tag_checker=_selfcheck_tag_item
+    )
+    if as_json:
+        for line in check.as_json(items).splitlines():
+            console_write(line)
+    else:
+        cli_report("自检", check.format_report(items))
+    return 0 if not check.has_blocking_failure(items) else 1
+
+
 def cli_net_check() -> int:
     """自检联网：这个 EXE 自己能不能连上第三方服务（用来区分"服务端问题"和"本机拦了"）。
 
@@ -10889,6 +10925,9 @@ def main(argv: list[str] | None = None) -> int:
             return code
         if args[0] == "--net-check":
             return cli_net_check()
+        if args[0] in ("--self-test", "--selftest"):
+            # 默认不联网（快、不会卡在慢网络上）；要测联网加 --deep，或用 --net-check
+            return cli_self_test(as_json="--json" in args, deep="--deep" in args)
         code, lines = cli_lookup(args[0])
         cli_report(f"{APP_TITLE} - {args[0]}", lines)
         return code

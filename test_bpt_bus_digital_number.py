@@ -11,6 +11,7 @@ with tolerant bounds instead of hard-coded counts.
 
 import ast
 import json
+import shutil
 import queue
 import sys
 import tempfile
@@ -27,6 +28,7 @@ from PIL import Image
 
 import bpt_data
 import bpt_online
+import bpt_selfcheck
 import bpt_web
 import BPT_BusDigitalNumber
 
@@ -3130,6 +3132,62 @@ class RealtimeTests(unittest.TestCase):
             self.assertNotIn("timeout_sec", load_settings(Path(directory))["network"])
             window.clear_log_action()
             self.assertIn("日志", window.network_status_var.get())
+
+
+class SelfCheckTests(unittest.TestCase):
+    """自检体系：好数据必须全过，坏数据必须只失败对应项，且每条失败都要给处理建议。"""
+
+    def good_base(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        base = Path(directory.name)
+        shutil.copy(Path(__file__).resolve().parent / bpt_data.DATA_FILENAME, base / bpt_data.DATA_FILENAME)
+        return base
+
+    def test_good_data_passes_without_blocking_failures(self):
+        base = self.good_base()
+        items = bpt_selfcheck.run_self_checks(base, {})
+        self.assertTrue(items)
+        self.assertFalse(bpt_selfcheck.has_blocking_failure(items), [i.key for i in items])
+        self.assertTrue(all(item.title and item.detail for item in items))
+        tag = next(item for item in items if item.key == "tags")
+        self.assertTrue(tag.ok or not tag.blocking)
+        self.assertIn("号段表", "\n".join(bpt_selfcheck.format_report(items)))
+
+    def test_broken_sheet_fails_and_explains(self):
+        base = self.good_base()
+        (base / bpt_data.DATA_FILENAME).write_bytes(b"not an xlsx")
+        by_key = {item.key: item for item in bpt_selfcheck.run_self_checks(base, {})}
+        self.assertFalse(by_key["sheet"].ok)
+        self.assertTrue(by_key["sheet"].blocking)
+        self.assertIn("备份", by_key["sheet"].hint)      # 必须告诉用户下一步怎么办
+        self.assertTrue(bpt_selfcheck.has_blocking_failure(list(by_key.values())))
+
+    def test_corrupt_user_json_fails_but_missing_is_fine(self):
+        base = self.good_base()
+        self.assertTrue({i.key: i for i in bpt_selfcheck.run_self_checks(base, {})}["json"].ok)
+        (base / bpt_data.LINES_FILENAME).write_text("{ 坏 json", encoding="utf-8")
+        bad = {item.key: item for item in bpt_selfcheck.run_self_checks(base, {})}
+        self.assertFalse(bad["json"].ok)
+        self.assertIn("线路.json", bad["json"].detail)
+
+    def test_tag_checker_is_injected_and_optional(self):
+        base = self.good_base()
+        without = {item.key: item for item in bpt_selfcheck.run_self_checks(base, {})}
+        self.assertIn("跳过", without["tags"].detail)
+        sentinel = bpt_selfcheck.CheckItem("tags", "车型标签", False, "98 种未确认", "去数据体检", blocking=False)
+        with_checker = {
+            item.key: item
+            for item in bpt_selfcheck.run_self_checks(base, {}, tag_checker=lambda _base: sentinel)
+        }
+        self.assertEqual(with_checker["tags"].detail, "98 种未确认")
+        self.assertFalse(with_checker["tags"].blocking)
+        self.assertFalse(bpt_selfcheck.has_blocking_failure(list(with_checker.values())))
+
+    def test_json_output_is_parseable(self):
+        items = bpt_selfcheck.run_self_checks(self.good_base(), {})
+        payload = json.loads(bpt_selfcheck.as_json(items))
+        self.assertEqual({entry["key"] for entry in payload}, {item.key for item in items})
 
 
 class OnlineParseTests(unittest.TestCase):

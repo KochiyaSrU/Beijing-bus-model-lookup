@@ -1,0 +1,12 @@
+# 统一换行处理（避免 Git 反复报 "LF will be replaced by CRLF"）
+* text=auto
+
+# Windows 批处理必须是 CRLF，否则 cmd 解析中文会错位
+*.bat text eol=crlf
+
+# 二进制文件，别让 git 去比较/转换它们
+*.xlsx binary
+*.ico binary
+*.png binary
+*.exe binary
+*.zip binary
