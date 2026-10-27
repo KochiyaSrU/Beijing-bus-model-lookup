@@ -4,24 +4,24 @@ cd /d "%~dp0"
 python generate_icon.py
 if /i "%~1"=="folder" goto folder
 
-python -m PyInstaller --noconfirm --clean --onefile --windowed --icon "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.ico" --add-data "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.ico;." --version-file "version_info.txt" --name "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷" --exclude-module numpy --exclude-module unittest --exclude-module pydoc --exclude-module pdb --exclude-module doctest --exclude-module difflib --exclude-module PIL.ImageQt --exclude-module PIL.ImageShow --exclude-module test --exclude-module lib2to3 --exclude-module xmlrpc BPT_BusDigitalNumber.py
-copy /y "dist\±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.exe" ".\±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.exe" >nul
+python -m PyInstaller --noconfirm --clean --onefile --windowed --icon "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.ico" --add-data "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.ico;." --version-file "version_info.txt" --name "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨" --exclude-module numpy --exclude-module unittest --exclude-module pydoc --exclude-module pdb --exclude-module doctest --exclude-module difflib --exclude-module PIL.ImageQt --exclude-module PIL.ImageShow --exclude-module test --exclude-module lib2to3 --exclude-module xmlrpc BPT_BusDigitalNumber.py
+copy /y "dist\åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.exe" ".\åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.exe" >nul
 rmdir /s /q build
 rmdir /s /q dist
-del /q "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.spec"
+del /q "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.spec"
 echo.
-echo ¹¹½¨Íê³É£º±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.exe£¨µ¥ÎÄ¼ş°æ£¬Ô¼ 17.7 MB£©
-echo ÇëÈ·±£ BPT_BusDigitalNumber.xlsx Óë EXE Î»ÓÚÍ¬Ò»ÎÄ¼ş¼Ğ¡£
-echo ÏëÒªÆô¶¯¸ü¿ìµÄ°æ±¾£¨Êµ²âÔ¼ 1 Ãë vs 2 Ãë£©£¬¿ÉÒÔ¸ÄÓÃ£º build.bat folder
+echo æ„å»ºå®Œæˆï¼šåŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.exeï¼ˆå•æ–‡ä»¶ç‰ˆï¼Œçº¦ 17.7 MBï¼‰
+echo è¯·ç¡®ä¿ BPT_BusDigitalNumber.xlsx ä¸ EXE ä½äºåŒä¸€æ–‡ä»¶å¤¹ã€‚
+echo æƒ³è¦å¯åŠ¨æ›´å¿«çš„ç‰ˆæœ¬ï¼ˆå®æµ‹çº¦ 1 ç§’ vs 2 ç§’ï¼‰ï¼Œå¯ä»¥æ”¹ç”¨ï¼š build.bat folder
 pause
 exit /b 0
 
 :folder
-python -m PyInstaller --noconfirm --clean --onedir --windowed --icon "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.ico" --add-data "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.ico;." --version-file "version_info.txt" --name "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷" --exclude-module numpy --exclude-module unittest --exclude-module pydoc --exclude-module pdb --exclude-module doctest --exclude-module difflib --exclude-module PIL.ImageQt --exclude-module PIL.ImageShow --exclude-module test --exclude-module lib2to3 --exclude-module xmlrpc BPT_BusDigitalNumber.py
+python -m PyInstaller --noconfirm --clean --onedir --windowed --icon "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.ico" --add-data "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.ico;." --version-file "version_info.txt" --name "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨" --exclude-module numpy --exclude-module unittest --exclude-module pydoc --exclude-module pdb --exclude-module doctest --exclude-module difflib --exclude-module PIL.ImageQt --exclude-module PIL.ImageShow --exclude-module test --exclude-module lib2to3 --exclude-module xmlrpc BPT_BusDigitalNumber.py
 rmdir /s /q build
-del /q "±±¾©¹«½»³µĞÍ²éÑ¯Æ÷.spec"
+del /q "åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨.spec"
 echo.
-echo ¹¹½¨Íê³É£ºdist\±±¾©¹«½»³µĞÍ²éÑ¯Æ÷\ ÎÄ¼ş¼Ğ°æ£¨Ô¼ 38 MB£¬Æô¶¯¸ü¿ì£©
-echo °ÑÊı¾İÎÄ¼ş·Å½ø dist\±±¾©¹«½»³µĞÍ²éÑ¯Æ÷\ ºóÔËĞĞÀïÃæµÄ EXE ¼´¿É¡£
+echo æ„å»ºå®Œæˆï¼šdist\åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨\ æ–‡ä»¶å¤¹ç‰ˆï¼ˆçº¦ 38 MBï¼Œå¯åŠ¨æ›´å¿«ï¼‰
+echo æŠŠæ•°æ®æ–‡ä»¶æ”¾è¿› dist\åŒ—äº¬å…¬äº¤è½¦å‹æŸ¥è¯¢å™¨\ åè¿è¡Œé‡Œé¢çš„ EXE å³å¯ã€‚
 pause
 exit /b 0
