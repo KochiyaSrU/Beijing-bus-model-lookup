@@ -1,0 +1,5 @@
+# 运行时依赖
+pillow>=10.0
+
+# 仅在重新打包 EXE（build.bat）时需要
+pyinstaller>=6.0

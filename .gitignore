@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# PyInstaller 产物
+build/
+dist/
+*.spec
+
+# 程序自动生成的备份与日志
+备份/
+*.bak
+错误日志*.txt
+界面设置.json
+归档/
+debug.log
+
+# 用户自己的数据（发布给别人时不要带这些）
+线路.json
+历史记录.json
+拍车日志.json
+拍车照片/
+车型图片/
+车型资料.json
+区属公交数据.json
+
+# 本地临时文件
+_shots/
+_tmp_probe/
+_*.py
+
+# 联网查询产生的用户数据
+联网缓存.json
+联网日志*.txt
+线路资料.json
+线路目录.json
+
+# 打包出来的安装包 / 可执行文件（体积大，走 Releases 发）
+发布/
+*.exe
+*.zip
+
+# 小程序版的数据产物（由 scripts/build_data.py 生成，可重现）
+小程序版/data/
+
+# 只给本机看的上传指引（含占位符，不进仓库）
+上传到 GitHub.md

@@ -1,0 +1,374 @@
+[
+  {
+    "line": "1号线八通线",
+    "start": "01001",
+    "end": "01031",
+    "model": "DKZ4"
+  },
+  {
+    "line": "1号线八通线",
+    "start": "01032",
+    "end": "01051",
+    "model": "SFM04"
+  },
+  {
+    "line": "1号线八通线",
+    "start": "01052",
+    "end": "01070",
+    "model": "SFM04A"
+  },
+  {
+    "line": "1号线八通线",
+    "start": "01071",
+    "end": "01078",
+    "model": "SFM01"
+  },
+  {
+    "line": "1号线八通线",
+    "start": "01079",
+    "end": "01083",
+    "model": "SFM02"
+  },
+  {
+    "line": "1号线八通线",
+    "start": "01084",
+    "end": "01094",
+    "model": "SFM01"
+  },
+  {
+    "line": "1号线八通线",
+    "start": "01095",
+    "end": "01100",
+    "model": "SFM07"
+  },
+  {
+    "line": "1号线八通线",
+    "start": "01101",
+    "end": "01112",
+    "model": "BDK06"
+  },
+  {
+    "line": "2号线",
+    "start": "T401",
+    "end": "T450",
+    "model": "DKZ16"
+  },
+  {
+    "line": "3号线",
+    "start": "03001",
+    "end": "03020",
+    "model": "ZBM06"
+  },
+  {
+    "line": "3号线",
+    "start": "03021",
+    "end": "03040",
+    "model": "SFM86"
+  },
+  {
+    "line": "4号线大兴线",
+    "start": "04001",
+    "end": "04053",
+    "model": "SFM05"
+  },
+  {
+    "line": "4号线大兴线",
+    "start": "04061",
+    "end": "04093",
+    "model": "SFM05"
+  },
+  {
+    "line": "5号线",
+    "start": "TP401",
+    "end": "TP461",
+    "model": "DKZ13"
+  },
+  {
+    "line": "6号线",
+    "start": "06001",
+    "end": "06064",
+    "model": "DKZ47"
+  },
+  {
+    "line": "6号线",
+    "start": "06065",
+    "end": "06084",
+    "model": "DKZ106"
+  },
+  {
+    "line": "6号线",
+    "start": "06085",
+    "end": "06092",
+    "model": "ZBM13"
+  },
+  {
+    "line": "7号线",
+    "start": "07001",
+    "end": "07035",
+    "model": "BDK01"
+  },
+  {
+    "line": "7号线",
+    "start": "07036",
+    "end": "07068",
+    "model": "BDK04"
+  },
+  {
+    "line": "8号线",
+    "start": "08001",
+    "end": "08040",
+    "model": "SFM12"
+  },
+  {
+    "line": "8号线",
+    "start": "08041",
+    "end": "08112",
+    "model": "SFM42"
+  },
+  {
+    "line": "9号线",
+    "start": "09001",
+    "end": "09024",
+    "model": "DKZ33"
+  },
+  {
+    "line": "9号线",
+    "start": "09025",
+    "end": "09038",
+    "model": "BDK05"
+  },
+  {
+    "line": "10号线",
+    "start": "10001",
+    "end": "10043",
+    "model": "DKZ15"
+  },
+  {
+    "line": "10号线",
+    "start": "10044",
+    "end": "10084",
+    "model": "DKZ34"
+  },
+  {
+    "line": "10号线",
+    "start": "10085",
+    "end": "10116",
+    "model": "DKZ46"
+  },
+  {
+    "line": "11号线",
+    "start": "11001",
+    "end": "11005",
+    "model": "ZBM04"
+  },
+  {
+    "line": "12号线",
+    "start": "12001",
+    "end": "12040",
+    "model": "CCD5049"
+  },
+  {
+    "line": "12号线",
+    "start": "12041",
+    "end": "12084",
+    "model": "ZBM05"
+  },
+  {
+    "line": "13号线",
+    "start": "H401",
+    "end": "H401",
+    "model": "DKZ5G"
+  },
+  {
+    "line": "13号线",
+    "start": "H402",
+    "end": "H402",
+    "model": "DKZ6"
+  },
+  {
+    "line": "13号线",
+    "start": "H403",
+    "end": "H456",
+    "model": "DKZ5G"
+  },
+  {
+    "line": "13号线",
+    "start": "13001",
+    "end": "13021",
+    "model": "ZBM15"
+  },
+  {
+    "line": "14号线",
+    "start": "14201",
+    "end": "14238",
+    "model": "DKZ53"
+  },
+  {
+    "line": "14号线",
+    "start": "14239",
+    "end": "14263",
+    "model": "SFM18"
+  },
+  {
+    "line": "15号线",
+    "start": "15001",
+    "end": "15034",
+    "model": "DKZ31"
+  },
+  {
+    "line": "15号线",
+    "start": "15035",
+    "end": "15056",
+    "model": "BDK08"
+  },
+  {
+    "line": "16号线",
+    "start": "16301",
+    "end": "16335",
+    "model": "DKZ93"
+  },
+  {
+    "line": "16号线",
+    "start": "16336",
+    "end": "16364",
+    "model": "SFM40"
+  },
+  {
+    "line": "17号线",
+    "start": "17501",
+    "end": "17538",
+    "model": "SFM79"
+  },
+  {
+    "line": "17号线",
+    "start": "17539",
+    "end": "17576",
+    "model": "CCD5035"
+  },
+  {
+    "line": "18号线",
+    "start": "18024",
+    "end": "18044",
+    "model": "ZBM15"
+  },
+  {
+    "line": "18号线",
+    "start": "18045",
+    "end": "18053",
+    "model": "CCD5091"
+  },
+  {
+    "line": "19号线",
+    "start": "19001",
+    "end": "19015",
+    "model": "CCD5034"
+  },
+  {
+    "line": "19号线",
+    "start": "19016",
+    "end": "19025",
+    "model": "SFM80"
+  },
+  {
+    "line": "亦庄线",
+    "start": "YZ001",
+    "end": "YZ023",
+    "model": "DKZ32"
+  },
+  {
+    "line": "房山线",
+    "start": "FS001",
+    "end": "FS021",
+    "model": "BJD01"
+  },
+  {
+    "line": "房山线",
+    "start": "FS022",
+    "end": "FS044",
+    "model": "BDK03"
+  },
+  {
+    "line": "燕房线",
+    "start": "YF001",
+    "end": "YF015",
+    "model": "DKZ70"
+  },
+  {
+    "line": "燕房线",
+    "start": "YF016",
+    "end": "YF016",
+    "model": "SFM16"
+  },
+  {
+    "line": "昌平线",
+    "start": "CP001",
+    "end": "CP015",
+    "model": "SFM13"
+  },
+  {
+    "line": "昌平线",
+    "start": "CP016",
+    "end": "CP032",
+    "model": "SFM21"
+  },
+  {
+    "line": "昌平线",
+    "start": "CP033",
+    "end": "CP050",
+    "model": "BDK07"
+  },
+  {
+    "line": "昌平线",
+    "start": "CP051",
+    "end": "CP068",
+    "model": "SFM93"
+  },
+  {
+    "line": "首都机场线",
+    "start": "L1101",
+    "end": "L1110",
+    "model": "QKZ5"
+  },
+  {
+    "line": "首都机场线",
+    "start": "L1111",
+    "end": "L1115",
+    "model": "CCD3004"
+  },
+  {
+    "line": "大兴机场线",
+    "start": "JC001",
+    "end": "JC008",
+    "model": "GSYE20"
+  },
+  {
+    "line": "大兴机场线",
+    "start": "JC009",
+    "end": "JC010",
+    "model": "CJ3"
+  },
+  {
+    "line": "大兴机场线",
+    "start": "JC401",
+    "end": "JC404",
+    "model": "GEYE23"
+  },
+  {
+    "line": "西郊线",
+    "start": "XJ001",
+    "end": "XJ031",
+    "model": "Sirio"
+  },
+  {
+    "line": "亦庄T1线",
+    "start": "YZ101",
+    "end": "YZ119",
+    "model": "YZT1"
+  },
+  {
+    "line": "S1线",
+    "start": "S1001",
+    "end": "S1010",
+    "model": "DZ32"
+  }
+]

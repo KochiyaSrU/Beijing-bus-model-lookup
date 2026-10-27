@@ -1,0 +1,345 @@
+{
+  "manufacturers": {
+    "BJD": "北京电车",
+    "LCK": "聊城中通",
+    "BYD": "比亚迪",
+    "HK": "江淮合客",
+    "HKL": "九龙大马",
+    "DNC": "吉利远程",
+    "SCT": "丰田汽车"
+  },
+  "models": {
+    "DNC6107BEVGS1（C10E）": {
+      "manufacturer": "吉利远程"
+    },
+    "HK6700K4": {
+      "manufacturer": "江淮合客",
+      "fuel": "柴油"
+    },
+    "HKL6600C": {
+      "manufacturer": "九龙大马",
+      "fuel": "柴油"
+    },
+    "SCT6700RZB53L": {
+      "manufacturer": "丰田汽车",
+      "fuel": "汽油"
+    },
+    "BJ6103C7BTD": {
+      "fuel": "天然气"
+    },
+    "BJ6123C7BTD": {
+      "fuel": "天然气"
+    },
+    "BJ6123C7BTD-1": {
+      "fuel": "天然气"
+    },
+    "BJ6127C8BTD": {
+      "fuel": "天然气"
+    },
+    "BJ6147C8BTD": {
+      "fuel": "天然气"
+    },
+    "BJ6147C8BTD-1": {
+      "fuel": "天然气"
+    },
+    "BK560": {
+      "fuel": "纯电动",
+      "length": "14 米级",
+      "body": "铰接"
+    },
+    "BJ6123C7BCD": {
+      "fuel": "天然气"
+    },
+    "BJ6123C7BCD-2": {
+      "fuel": "天然气"
+    },
+    "BJ6128C8BCD": {
+      "fuel": "天然气",
+      "body": "双层"
+    },
+    "BJ6851C6BCD": {
+      "fuel": "天然气"
+    },
+    "BJ6105C7BHD": {
+      "fuel": "柴油"
+    },
+    "BJ6123C7BHD": {
+      "fuel": "柴油"
+    },
+    "BJ6123C6B4D": {
+      "fuel": "纯电动"
+    },
+    "BJ6123C6B4D-1": {
+      "fuel": "纯电动"
+    },
+    "BJ6127C8MJB": {
+      "fuel": "柴油"
+    },
+    "BJ6127C8MJB-1": {
+      "fuel": "柴油"
+    },
+    "BJ6127C8MJB-2": {
+      "fuel": "柴油"
+    },
+    "BJ6127C8BTB-1": {
+      "fuel": "天然气"
+    },
+    "BJ6112C7MTB-1": {
+      "fuel": "天然气"
+    },
+    "BJ6120U8LJB-5": {
+      "fuel": "柴油"
+    },
+    "BJ6123C7C4D": {
+      "fuel": "柴油，电"
+    },
+    "BJ6123C7NJB": {
+      "fuel": "柴油"
+    },
+    "BJ6123C7NJB-1": {
+      "fuel": "柴油"
+    },
+    "BJ6127C8BHB": {
+      "fuel": "柴油"
+    },
+    "GTQ6131BEVST8": {
+      "body": "双层"
+    },
+    "BJ6128SHEVCA-5": {
+      "body": "双层"
+    },
+    "ZK6902HGA": {
+      "fuel": "柴油"
+    },
+    "ZK6831HGA": {
+      "fuel": "柴油"
+    },
+    "ZK6127HE": {
+      "fuel": "柴油"
+    },
+    "ZK6107HE": {
+      "fuel": "柴油"
+    },
+    "XMQ6120": {
+      "fuel": "柴油"
+    },
+    "ZK6128HN2": {
+      "fuel": "天然气"
+    },
+    "ZK6129HGA9": {
+      "fuel": "柴油"
+    },
+    "ZK6125HG3": {
+      "fuel": "柴油"
+    },
+    "ZK6125HGQAA": {
+      "fuel": "柴油"
+    },
+    "ZK6122HQ5Y": {
+      "fuel": "柴油"
+    },
+    "ZK6107H": {
+      "fuel": "柴油"
+    },
+    "XMQ6900Y": {
+      "fuel": "柴油"
+    },
+    "XMQ6900AYD5C": {
+      "fuel": "柴油"
+    },
+    "XMQ6798": {
+      "fuel": "柴油"
+    },
+    "XMQ6771Y": {
+      "fuel": "柴油"
+    },
+    "XMQ6706NE3": {
+      "fuel": "柴油"
+    },
+    "XMQ6129Y2": {
+      "fuel": "柴油"
+    },
+    "KLQ6109QE4": {
+      "fuel": "柴油"
+    },
+    "BJ6160C6CCD": {
+      "fuel": "天然气"
+    },
+    "BJ6180C8CTD": {
+      "fuel": "天然气"
+    },
+    "BJ6180C8CTD-1": {
+      "fuel": "天然气"
+    },
+    "HKL6701CV": {
+      "manufacturer": "九龙大马",
+      "fuel": "柴油"
+    },
+    "CA6120URD22": {
+      "fuel": "柴油"
+    },
+    "CA6120URD24": {
+      "fuel": "柴油"
+    },
+    "BK6100N": {
+      "fuel": "天然气"
+    },
+    "BK6125DK": {
+      "fuel": "柴油"
+    },
+    "BJ6881U6LGB": {
+      "fuel": "柴油"
+    },
+    "HK6761G1": {
+      "manufacturer": "江淮合客",
+      "fuel": "柴油"
+    },
+    "HK6910G4": {
+      "manufacturer": "江淮合客",
+      "fuel": "柴油"
+    },
+    "BJ6127C8BTB": {
+      "fuel": "天然气"
+    },
+    "BJ6127C8MTB": {
+      "fuel": "天然气"
+    },
+    "BJ6140C8CTD": {
+      "fuel": "天然气"
+    },
+    "BJ6180C8DJD": {
+      "fuel": "柴油"
+    },
+    "KLQ6128GE4": {
+      "fuel": "柴油"
+    },
+    "XMQ6100G1": {
+      "fuel": "天然气"
+    },
+    "XMQ6120C2": {
+      "fuel": "柴油"
+    },
+    "XMQ6122Y": {
+      "fuel": "柴油"
+    },
+    "XMQ6127GH1": {
+      "fuel": "柴油，电"
+    },
+    "XML6858J15": {
+      "fuel": "柴油"
+    },
+    "XML6700J88": {
+      "fuel": "柴油"
+    },
+    "XML6601J18Q": {
+      "fuel": "汽油"
+    },
+    "XML6127J13": {
+      "fuel": "柴油"
+    },
+    "KLQ6608EC": {
+      "fuel": "柴油"
+    },
+    "KLQ6850GE3": {
+      "fuel": "柴油"
+    },
+    "KLQ6898QE5": {
+      "fuel": "柴油"
+    },
+    "KLQ6129GE5": {
+      "fuel": "柴油"
+    },
+    "KLQ6129GAE6": {
+      "fuel": "柴油"
+    },
+    "KLQ6129TAE41": {
+      "fuel": "柴油"
+    },
+    "JNP6140GVC": {
+      "fuel": "天然气"
+    },
+    "JNP6181GVC": {
+      "fuel": "天然气"
+    },
+    "HFF6182G02D": {
+      "fuel": "柴油"
+    },
+    "HFF6110GS01D": {
+      "fuel": "柴油",
+      "body": "双层"
+    },
+    "HFF6120GS01C": {
+      "fuel": "天然气",
+      "body": "双层"
+    },
+    "HFF6120G15C": {
+      "fuel": "天然气"
+    },
+    "JNP6120G-1": {
+      "fuel": "柴油"
+    },
+    "JNP6120GC": {
+      "fuel": "柴油"
+    },
+    "JNP6803NV": {
+      "fuel": "天然气"
+    },
+    "JNP6120GV": {
+      "fuel": "柴油"
+    },
+    "JNP6120GV1": {
+      "fuel": "柴油"
+    },
+    "JNP6120GHP-1": {
+      "fuel": "柴油，电"
+    },
+    "HFF6902K55": {
+      "fuel": "柴油"
+    },
+    "HFF6900KZ-8": {
+      "fuel": "柴油"
+    },
+    "HFF6124K40": {
+      "fuel": "柴油"
+    },
+    "HFF6105G39C": {
+      "fuel": "天然气"
+    },
+    "HFF6121G15C": {
+      "fuel": "天然气"
+    },
+    "HFF6122KZ-2": {
+      "fuel": "柴油"
+    },
+    "HFF6123KZ-2": {
+      "fuel": "柴油"
+    },
+    "HFF6127GZ-4": {
+      "fuel": "柴油"
+    },
+    "HFF6128GZ-4": {
+      "fuel": "柴油"
+    },
+    "GTQ6131BEVST3": {
+      "body": "双层"
+    },
+    "JNP6130GSC": {
+      "fuel": "天然气",
+      "body": "双层"
+    },
+    "HFF6122GS03EV": {
+      "body": "双层"
+    }
+  },
+  "aliases": {
+    "BJ6103C7BTD": [
+      "旅游鹰"
+    ],
+    "BJ6105C7BHD": [
+      "小柴鹰"
+    ],
+    "HFF6105G39C": [
+      "小安凯"
+    ]
+  }
+}

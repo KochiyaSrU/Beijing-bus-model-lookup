@@ -1,0 +1,34 @@
+# PyInstaller 版本信息资源：让 EXE 在「属性 → 详细信息」里显示正常的程序信息，
+# 而不是一片空白（空白 + 无签名是杀软启发式评分的常见扣分项）。
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 1, 0, 0),
+    prodvers=(1, 1, 0, 0),
+    mask=0x3f,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo(
+      [
+        StringTable(
+          '080404B0',
+          [
+            StringStruct('CompanyName', '北京公交车型查询器'),
+            StringStruct('FileDescription', '北京公交车型查询器（公交 / 地铁自编号查询工具）'),
+            StringStruct('FileVersion', '1.1.0.0'),
+            StringStruct('InternalName', 'BPT_BusDigitalNumber'),
+            StringStruct('LegalCopyright', ''),
+            StringStruct('OriginalFilename', '北京公交车型查询器.exe'),
+            StringStruct('ProductName', '北京公交车型查询器'),
+            StringStruct('ProductVersion', '1.1.0.0')
+          ]
+        )
+      ]
+    ),
+    VarFileInfo([VarStruct('Translation', [2052, 1200])])
+  ]
+)
