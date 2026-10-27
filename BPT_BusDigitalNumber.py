@@ -3284,6 +3284,9 @@ class BusLookupApp(tk.Tk):
         self.status_dot.pack(side="left", padx=(0, pad(6)))
         ttk.Label(status_row, textvariable=self.status_var, style="Muted.TLabel", wraplength=pad(310)).pack(side="left")
         ttk.Button(status_row, text="⚙ 设置", style="Secondary.TButton", command=self.open_settings).pack(side="right")
+        ttk.Button(status_row, text="🔍 自检", style="Ghost.TButton", command=self.open_selfcheck).pack(
+            side="right", padx=(0, pad(6))
+        )
 
         # 少用的联网两项已收进卡片里的菜单；不再整块折叠（折叠后窗口收不回来、也太空，用户反馈过）
         self.update_idletasks()
@@ -3468,6 +3471,16 @@ class BusLookupApp(tk.Tk):
             return
         QuickLookupWindow(self, tab)
 
+    def open_selfcheck(self) -> None:
+        """自检：查数据文件、标签、写入权限、磁盘和（可选）联网。"""
+        if getattr(self, "_selfcheck_window", None) is not None:
+            try:
+                self._selfcheck_window.lift()
+                self._selfcheck_window.focus_force()
+                return
+            except tk.TclError:
+                self._selfcheck_window = None
+        self._selfcheck_window = SelfCheckWindow(self)
     def open_settings(self) -> None:
         SettingsWindow(self)
 
@@ -5784,6 +5797,136 @@ class LineQueryWindow(WindowMixin, tk.Toplevel):
         model = str(self.detail_table.tree.item(selection[0], "values")[0])
         if model in set(model_names(self.app.ranges)):
             ModelDetailWindow(self, model)
+
+
+class SelfCheckWindow(WindowMixin, tk.Toplevel):
+    """自检窗口：把"这个程序现在能不能正常用"一条条列出来，失败项直接给处理建议。"""
+
+    def __init__(self, app: "BusLookupApp") -> None:
+        super().__init__(app)
+        self.app = app
+        self.theme = app.theme
+        self.setup_dialog(app, "自检", 760, 540)
+        pad = self.theme.px
+        self._queue: "queue.Queue" = queue.Queue()
+        self._poll_after: str | None = None
+        self._running = False
+        self.items: list = []
+
+        frame = ttk.Frame(self, padding=(pad(16), pad(14)))
+        frame.pack(fill="both", expand=True)
+        frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(2, weight=1)
+
+        ttk.Label(
+            frame, text="自检", style="HeaderTitle.TLabel",
+            background=self.theme.background, foreground=self.theme.text,
+        ).grid(row=0, column=0, sticky="w")
+        ttk.Label(
+            frame, text="查号段表、标签、数据文件、写入权限和磁盘；结果可以复制发给别人",
+            style="Muted.TLabel", background=self.theme.background,
+        ).grid(row=0, column=0, sticky="w", pady=(pad(26), 0))
+        self.state_var = tk.StringVar(value="正在检查…")
+        ttk.Label(
+            frame, textvariable=self.state_var, style="Muted.TLabel", background=self.theme.background
+        ).grid(row=1, column=0, sticky="w", pady=(pad(6), pad(8)))
+
+        holder = ttk.Frame(frame)
+        holder.grid(row=2, column=0, sticky="nsew")
+        holder.columnconfigure(0, weight=1)
+        holder.rowconfigure(0, weight=1)
+        self.table = ttk.Treeview(
+            holder, columns=("item", "result", "detail"), show="headings", height=9, selectmode="browse"
+        )
+        for column, title, width, anchor in (
+            ("item", "项目", pad(130), "w"),
+            ("result", "结果", pad(56), "center"),
+            ("detail", "说明", pad(400), "w"),
+        ):
+            self.table.heading(column, text=title)
+            self.table.column(column, width=width, anchor=anchor, stretch=column != "item")
+        scroll = ttk.Scrollbar(holder, orient="vertical", command=self.table.yview)
+        self.table.configure(yscrollcommand=scroll.set)
+        self.table.grid(row=0, column=0, sticky="nsew")
+        scroll.grid(row=0, column=1, sticky="ns")
+        self.table.tag_configure("ok", foreground=self.theme.text)
+        self.table.tag_configure("warn", foreground=getattr(self.theme, "warning", "#B26A00"))
+        self.table.tag_configure("fail", foreground=self.theme.danger)
+
+        self.hint_var = tk.StringVar(value="")
+        ttk.Label(
+            frame, textvariable=self.hint_var, style="Muted.TLabel", background=self.theme.background,
+            wraplength=pad(660), justify="left",
+        ).grid(row=3, column=0, sticky="w", pady=(pad(8), 0))
+
+        buttons = ttk.Frame(frame)
+        buttons.grid(row=4, column=0, sticky="ew", pady=(pad(10), 0))
+        ttk.Button(buttons, text="重新检查", style="Secondary.TButton", command=self.run_checks).pack(side="left")
+        ttk.Button(
+            buttons, text="顺便测联网", style="Secondary.TButton", command=lambda: self.run_checks(deep=True)
+        ).pack(side="left", padx=(pad(6), 0))
+        ttk.Button(buttons, text="复制结果", style="Secondary.TButton", command=self.copy_result).pack(
+            side="left", padx=(pad(6), 0)
+        )
+        ttk.Button(buttons, text="关闭", style="Ghost.TButton", command=self.close_dialog).pack(side="right")
+
+        self.run_checks()
+
+    def run_checks(self, deep: bool = False) -> None:
+        """在工作线程里跑，结果回主线程渲染（不在线程里碰控件）。"""
+        if self._running:
+            return
+        self._running = True
+        self.state_var.set("正在测联网（要几秒）…" if deep else "正在检查…")
+        self.hint_var.set("")
+        self.table.delete(*self.table.get_children())
+        base = application_dir()
+
+        def work() -> None:
+            import bpt_selfcheck as check
+
+            try:
+                items = check.run_self_checks(base, {}, deep=deep, tag_checker=_selfcheck_tag_item)
+            except Exception as error:  # noqa: BLE001 - 自检自己出错也要显示出来
+                items = [
+                    check.CheckItem("self", "自检本身", False, f"{type(error).__name__}: {error}", "把这句发给维护者")
+                ]
+            self._queue.put(items)
+
+        threading.Thread(target=work, name="bpt-selfcheck", daemon=True).start()
+        self._poll_after = self.after(120, self._poll)
+
+    def _poll(self) -> None:
+        try:
+            items = self._queue.get_nowait()
+        except queue.Empty:
+            self._poll_after = self.after(120, self._poll)
+            return
+        self._running = False
+        self.items = list(items)
+        self.render(self.items)
+
+    def render(self, items: list) -> None:
+        for item in items:
+            tag = "ok" if item.ok else ("warn" if not item.blocking else "fail")
+            self.table.insert("", "end", values=(item.title, item.mark, item.detail), tags=(tag,))
+        failed = [item for item in items if not item.ok and item.blocking]
+        notes = [item for item in items if not item.ok and not item.blocking]
+        if failed:
+            self.state_var.set(f"有 {len(failed)} 项需要处理")
+        elif notes:
+            self.state_var.set(f"能正常用；另有 {len(notes)} 项是提示")
+        else:
+            self.state_var.set("全部通过")
+        self.hint_var.set("　".join(f"{item.title}：{item.hint}" for item in items if not item.ok and item.hint))
+
+    def copy_result(self) -> None:
+        import bpt_selfcheck as check
+
+        text = "\n".join(check.format_report(self.items)) if self.items else "还没有结果"
+        self.clipboard_clear()
+        self.clipboard_append(text)
+        self.state_var.set("结果已复制到剪贴板")
 
 
 class DataHealthWindow(WindowMixin, tk.Toplevel):

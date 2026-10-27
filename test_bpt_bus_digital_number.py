@@ -2127,6 +2127,59 @@ class FakeTransport:
         self.closed = True
 
 
+class SelfCheckWindowTests(unittest.TestCase):
+    """界面里的自检窗口：能开出清单、状态是一句话、结果能复制。"""
+
+    @classmethod
+    def setUpClass(cls):
+        try:
+            cls.app = BusLookupApp()
+        except Exception as error:  # pragma: no cover - headless machines
+            raise unittest.SkipTest(f"Tk 不可用：{error}")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.app._closing = True
+        cls.app.destroy()
+
+    def make_window(self):
+        window = BPT_BusDigitalNumber.SelfCheckWindow(self.app)
+        for _ in range(300):
+            self.app.update()
+            if window.items:
+                break
+            time.sleep(0.02)
+        self.addCleanup(lambda: window.winfo_exists() and window.close_dialog())
+        return window
+
+    def test_lists_checks_with_marks(self):
+        window = self.make_window()
+        self.assertTrue(window.items)
+        rows = [window.table.item(child, "values") for child in window.table.get_children()]
+        self.assertEqual(len(rows), len(window.items))
+        for values in rows:
+            self.assertIn(values[1], {"✓", "!", "✗"})
+            self.assertTrue(values[0] and values[2])
+        self.assertTrue(window.state_var.get())
+
+    def test_copy_reports_success(self):
+        window = self.make_window()
+        window.copy_result()
+        self.assertIn("复制", window.state_var.get())
+
+    def test_main_window_has_selfcheck_button(self):
+        texts = []
+        stack = [self.app]
+        while stack:
+            widget = stack.pop()
+            stack.extend(widget.winfo_children())
+            try:
+                texts.append(str(widget.cget("text")))
+            except Exception:  # noqa: BLE001
+                continue
+        self.assertTrue(any("自检" in text for text in texts), "主界面没有自检入口")
+
+
 class LayoutGuardTests(unittest.TestCase):
     """主界面尺寸护栏：窗口不能超过屏幕可用高度，也不能比内容矮（矮了会裁掉底部）。"""
 
