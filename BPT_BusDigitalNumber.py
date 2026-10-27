@@ -3227,30 +3227,14 @@ class BusLookupApp(tk.Tk):
         ttk.Button(repair_buttons, text="打开程序文件夹", style="Secondary.TButton", command=self.open_data_folder).pack(side="left")
         self.repair_row.grid_remove()
 
-        quick_card = theme.card(body, accent=True)
-        quick_card.grid(row=1, column=0, sticky="ew", pady=(pad(10), 0))
-        quick_inner = ttk.Frame(quick_card, style="Card.TFrame", padding=(pad(16), pad(11)))
-        quick_inner.pack(fill="both", expand=True)
-        quick_inner.columnconfigure(0, weight=1)
-        quick_inner.columnconfigure(1, weight=1)
-        theme.section(quick_inner, "快查工具", background=theme.surface, pady=(0, 8), grid=(0, 0, 2))
-        ttk.Button(quick_inner, text="批量查询编号", style="Secondary.TButton", command=lambda: self.open_quick_lookup(0)).grid(
-            row=1, column=0, sticky="ew", padx=(0, pad(6))
-        )
-        ttk.Button(quick_inner, text="号段区间查询", style="Secondary.TButton", command=lambda: self.open_quick_lookup(1)).grid(
-            row=1, column=1, sticky="ew", padx=(pad(6), 0)
-        )
-        ttk.Button(quick_inner, text="拍车日志", style="Secondary.TButton", command=self.open_spot_log).grid(
-            row=2, column=0, columnspan=2, sticky="ew", pady=(pad(8), 0)
-        )
-
+        # 一张"工具"卡：原来的"快查工具"和"数据管理"合并，少一个卡头、少两行按钮
         manage_card = theme.card(body, accent=True)
-        manage_card.grid(row=2, column=0, sticky="ew", pady=(pad(10), 0))
-        manage_inner = ttk.Frame(manage_card, style="Card.TFrame", padding=(pad(16), pad(11)))
+        manage_card.grid(row=1, column=0, sticky="ew", pady=(pad(10), 0))
+        manage_inner = ttk.Frame(manage_card, style="Card.TFrame", padding=(pad(14), pad(9)))
         manage_inner.pack(fill="both", expand=True)
         manage_inner.columnconfigure(0, weight=1)
         manage_inner.columnconfigure(1, weight=1)
-        theme.section(manage_inner, "数据管理", background=theme.surface, pady=(0, 8), grid=(0, 0, 2))
+        theme.section(manage_inner, "工具", background=theme.surface, pady=(0, 6), grid=(0, 0, 2))
         # 常用的六个两列排好；只有"联网"这两项收进菜单（用得少、还比较新）
         self.catalog_button = ttk.Button(manage_inner, text="车型目录", style="Secondary.TButton", command=self.open_catalog)
         self.catalog_button.grid(row=1, column=0, sticky="ew", padx=(0, pad(6)))
@@ -3275,12 +3259,21 @@ class BusLookupApp(tk.Tk):
         self.online_button.grid(row=4, column=1, sticky="ew", padx=(pad(6), 0), pady=(pad(8), 0))
         compact_menu(
             manage_inner,
-            "更多联网工具 ▾",
+            "快查工具 ▾",
             [
-                ("线路资料（两个方向首末站 / 站点 / 实时）", self.open_line_info),
+                ("批量查询编号", lambda: self.open_quick_lookup(0)),
+                ("号段区间查询", lambda: self.open_quick_lookup(1)),
+                ("拍车日志", self.open_spot_log),
+            ],
+        ).grid(row=5, column=0, sticky="ew", padx=(0, pad(6)), pady=(pad(6), 0))
+        compact_menu(
+            manage_inner,
+            "联网工具 ▾",
+            [
+                ("线路资料（首末站 / 站点 / 实时）", self.open_line_info),
                 ("联网查询（这辆车跑过哪些线）", self.open_online_query),
             ],
-        ).grid(row=5, column=0, columnspan=2, sticky="ew", pady=(pad(8), 0))
+        ).grid(row=5, column=1, sticky="ew", padx=(pad(6), 0), pady=(pad(6), 0))
 
         status = ttk.Frame(self, padding=(pad(18), 0, pad(18), pad(10)))
         status.grid(row=2, column=0, sticky="ew")
@@ -10729,21 +10722,24 @@ def console_write(text: str) -> bool:
 
 
 def cli_report(title: str, lines: list[str]) -> None:
-    """命令行模式的输出：能写终端就写终端，否则弹窗 + 复制到剪贴板。"""
+    """命令行模式的输出：优先写终端；拿不到终端就**落盘**，绝不弹窗。
+
+    为什么不再弹窗：打包成 --windowed 后没有控制台，一旦回退到 messagebox 就会**永久阻塞**
+    （实测 `exe --self-test > out.txt` 卡死 5 分钟、只能强杀）。命令行就该安静退出，
+    所以改成写一个文件，路径写在 README 里。
+    """
     text = "\n".join(lines)
     if console_write(text):
         return
     # 打包后 sys.stdout 是空的：先附着父进程控制台再试一次
     if attach_console() and console_write(text):
         return
-    root = tk.Tk()
-    root.withdraw()
+    safe_title = "".join(char for char in title if char.isalnum() or char in " _-") or "output"
+    target = application_dir() / f"命令行输出-{safe_title}.txt"
     try:
-        root.clipboard_clear()
-        root.clipboard_append(text)
-        messagebox.showinfo(title, f"{text}\n\n（内容已复制到剪贴板）")
-    finally:
-        root.destroy()
+        target.write_text(text + "\n", encoding="utf-8")
+    except OSError:
+        pass
 
 
 def cli_lookup(number_text: str) -> tuple[int, list[str]]:

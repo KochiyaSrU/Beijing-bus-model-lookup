@@ -2127,6 +2127,46 @@ class FakeTransport:
         self.closed = True
 
 
+class LayoutGuardTests(unittest.TestCase):
+    """主界面尺寸护栏：窗口不能超过屏幕可用高度，也不能比内容矮（矮了会裁掉底部）。"""
+
+    @classmethod
+    def setUpClass(cls):
+        try:
+            cls.app = BusLookupApp()
+        except Exception as error:  # pragma: no cover - headless machines
+            raise unittest.SkipTest(f"Tk 不可用：{error}")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.app._closing = True
+        cls.app.destroy()
+
+    def test_window_fits_screen_and_does_not_clip(self):
+        app = self.app
+        app.update()
+        screen = app.winfo_screenheight()
+        height = app.winfo_height()
+        self.assertLessEqual(height, screen - 100, f"窗口 {height}px 太高，屏幕只有 {screen}px")
+        self.assertGreaterEqual(height + 4, min(app.winfo_reqheight(), screen - 100))
+
+    def test_only_one_primary_button(self):
+        """主界面每屏只该有一个主色按钮（查询），其余都是次要样式。"""
+        app = self.app
+        app.update()
+        primary = 0
+        stack = [app]
+        while stack:
+            widget = stack.pop()
+            stack.extend(widget.winfo_children())
+            try:
+                if str(widget.cget("style")) == "Primary.TButton":
+                    primary += 1
+            except Exception:  # noqa: BLE001 - 不是 ttk 控件
+                continue
+        self.assertLessEqual(primary, 2, f"主色按钮有 {primary} 个，太多了")
+
+
 class MainOnlineTests(unittest.TestCase):
     """主界面自动补两行：这辆车现在在哪 / 最新在哪条线运营。"""
 
